@@ -26,8 +26,9 @@ if __name__ == "__main__":
     sched = BlockingScheduler()
     exec_date = now_plus_10 = datetime.now() + timedelta(seconds = 5)
     #job = sched.add_date_job(send_to_telegram, exec_date, ['this is a scheduled message'])
+    message =f'Job scheduled at: {exec_date}'
     sched.add_job(send_to_telegram, 'date', run_date = exec_date,
-                           args=['Job 1'])
+                           args=[message])
     sched.start()
     print("Job scheduled at: ", exec_date)
     while True:
