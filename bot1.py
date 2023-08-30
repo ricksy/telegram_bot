@@ -18,7 +18,7 @@ def send_to_telegram(message):
         print(response.text)
     except Exception as e:
         print(e)
-interval = 10
+interval = 1800
 if __name__ == "__main__":
     message = "Starting bot"
     send_to_telegram(message)
