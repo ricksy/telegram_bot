@@ -1,36 +1,33 @@
 #!/usr/bin/env python3
 from time import sleep
-from resources.credentials import bot_token, bot_user_name, chat_id
+#from resources.credentials import bot_token, bot_user_name, chat_id
 import requests
 import sys
+import os
 from datetime import datetime, timedelta
-from apscheduler.schedulers.background import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+bot_token = os.environ.get('BOT_TOKEN')
+bot_user_name = os.environ.get('BOT_USER_NAME')
+chat_id = os.environ.get('CHAT_ID')
 
 def send_to_telegram(message):
     apiURL = f'https://api.telegram.org/bot{bot_token}/sendMessage'
 
     try:
-        response = requests.post(apiURL, json={'chat_id': chat_id, 'text': message})
+        response = requests.post(apiURL, json={'chat_id': chat_id, 'text': f'{datetime.now()}: ' + message})
         print(response.text)
     except Exception as e:
         print(e)
-
-
+interval = 10
 if __name__ == "__main__":
-    if  len( sys.argv ) < 2:
-        message = input("give your message: ")
-    else:
-        message = sys.argv[1]
+    message = "Starting bot"
     send_to_telegram(message)
     # Creates a default Background Scheduler
-    sched = BlockingScheduler()
-    exec_date = now_plus_10 = datetime.now() + timedelta(seconds = 5)
-    #job = sched.add_date_job(send_to_telegram, exec_date, ['this is a scheduled message'])
-    message =f'Job scheduled at: {exec_date}'
-    sched.add_job(send_to_telegram, 'date', run_date = exec_date,
-                           args=[message])
+    sched = BackgroundScheduler()
+    # Schedule job_function to be called every 30 minutes
+    sched.add_job(send_to_telegram, 'interval', seconds=interval,
+                        args=['Go for a walk now!'])
     sched.start()
-    print("Job scheduled at: ", exec_date)
     while True:
-        sleep(1)
+        sleep(interval)
     
